@@ -139,7 +139,7 @@ class Response:
         self._sock = sock
         self.chunked = False
         self.encoding = "utf-8"
-        self.headers = [] if save_headers else None
+        self.headers = {} if save_headers else None
         self.reason = ""
         self.status_code = None
 
@@ -241,7 +241,8 @@ class Response:
         self._parse_header(data)
 
         if self.headers is not None:
-            self.headers.append(data.rstrip(b"\r\n"))
+            key,val = data.rstrip(b"\r\n").decode('utf-8').split(':',1)
+            self.headers[key] = val
 
     def close(self):
         if self._sf and not MICROPY:
